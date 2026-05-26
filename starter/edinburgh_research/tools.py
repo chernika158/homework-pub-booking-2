@@ -17,11 +17,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from sovereign_agent.tools.registry import ToolError
-from starter.edinburgh_research.integrity import record_tool_call
-
 from sovereign_agent.session.directory import Session
-from sovereign_agent.tools.registry import ToolRegistry, ToolResult, _RegisteredTool
+from sovereign_agent.tools.registry import ToolError, ToolRegistry, ToolResult, _RegisteredTool
+
+from starter.edinburgh_research.integrity import record_tool_call
 
 _SAMPLE_DATA = Path(__file__).parent / "sample_data"
 
@@ -52,7 +51,8 @@ def venue_search(near: str, party_size: int, budget_max_gbp: int = 1000) -> Tool
     venues = json.loads(fixture.read_text())
 
     results = [
-        v for v in venues
+        v
+        for v in venues
         if v.get("open_now") is True
         and near.lower() in v.get("area", "").lower()
         and v.get("seats_available_evening", 0) >= party_size
@@ -188,17 +188,17 @@ def calculate_cost(
     if venue is None:
         raise ToolError("SA_TOOL_INVALID_INPUT", f"venue_id '{venue_id}' not found in venues.json")
 
-    base_per_head = cat["base_rates_gbp_per_head"][catering_tier]   # e.g. 18
-    venue_mult    = cat["venue_modifiers"][venue_id]                 # e.g. 1.0
-    svc_pct       = cat["service_charge_percent"]                    # 10
-    hire_and_min  = venue["hire_fee_gbp"] + venue["min_spend_gbp"]  # e.g. 0 + 200 = 200
+    base_per_head = cat["base_rates_gbp_per_head"][catering_tier]  # e.g. 18
+    venue_mult = cat["venue_modifiers"][venue_id]  # e.g. 1.0
+    svc_pct = cat["service_charge_percent"]  # 10
+    hire_and_min = venue["hire_fee_gbp"] + venue["min_spend_gbp"]  # e.g. 0 + 200 = 200
 
     subtotal = int(base_per_head * venue_mult * party_size * max(1, duration_hours))
-    service  = int(subtotal * svc_pct / 100)
-    total    = subtotal + service + hire_and_min
+    service = int(subtotal * svc_pct / 100)
+    total = subtotal + service + hire_and_min
 
     # Deposit policy thresholds from catering.json (string-keyed, parsed manually)
-    policy = cat["deposit_policy"]
+
     if total < 300:
         # "under_gbp_300": "no_deposit_required"
         deposit = 0
@@ -312,23 +312,23 @@ def generate_flyer(session: Session, event_details: dict) -> ToolResult:
   <h1 data-testid="event-title">Edinburgh Private Event</h1>
   <dl>
     <dt class="section-head">Venue</dt>
-    <dt>Name</dt>       <dd data-testid="venue-name">{d.get('venue_name', '')}</dd>
-    <dt>Address</dt>    <dd data-testid="venue-address">{d.get('venue_address', '')}</dd>
+    <dt>Name</dt>       <dd data-testid="venue-name">{d.get("venue_name", "")}</dd>
+    <dt>Address</dt>    <dd data-testid="venue-address">{d.get("venue_address", "")}</dd>
 
     <dt class="section-head">Event</dt>
-    <dt>Date</dt>       <dd data-testid="event-date">{d.get('date', '')}</dd>
-    <dt>Time</dt>       <dd data-testid="event-time">{d.get('time', '')}</dd>
-    <dt>Guests</dt>     <dd data-testid="party-size">{d.get('party_size', '')}</dd>
-    <dt>Catering</dt>   <dd data-testid="catering-tier">{d.get('catering_tier', '')}</dd>
-    <dt>Duration</dt>   <dd data-testid="duration-hours">{d.get('duration_hours', '')} hours</dd>
+    <dt>Date</dt>       <dd data-testid="event-date">{d.get("date", "")}</dd>
+    <dt>Time</dt>       <dd data-testid="event-time">{d.get("time", "")}</dd>
+    <dt>Guests</dt>     <dd data-testid="party-size">{d.get("party_size", "")}</dd>
+    <dt>Catering</dt>   <dd data-testid="catering-tier">{d.get("catering_tier", "")}</dd>
+    <dt>Duration</dt>   <dd data-testid="duration-hours">{d.get("duration_hours", "")} hours</dd>
 
     <dt class="section-head">Weather</dt>
-    <dt>Condition</dt>  <dd data-testid="condition">{d.get('condition', '')}</dd>
-    <dt>Temperature</dt><dd data-testid="temperature">{d.get('temperature_c', '')}°C</dd>
+    <dt>Condition</dt>  <dd data-testid="condition">{d.get("condition", "")}</dd>
+    <dt>Temperature</dt><dd data-testid="temperature">{d.get("temperature_c", "")}°C</dd>
 
     <dt class="section-head">Cost</dt>
-    <dt>Total</dt>      <dd data-testid="total-cost">£{d.get('total_gbp', '')}</dd>
-    <dt>Deposit</dt>    <dd data-testid="deposit">£{d.get('deposit_required_gbp', '')}</dd>
+    <dt>Total</dt>      <dd data-testid="total-cost">£{d.get("total_gbp", "")}</dd>
+    <dt>Deposit</dt>    <dd data-testid="deposit">£{d.get("deposit_required_gbp", "")}</dd>
   </dl>
 </article>
 </body>

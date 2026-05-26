@@ -4,7 +4,7 @@
 
 ### Your answer
 
-In my Ex7 run (session sess_a382a2149fc1), the planner's second
+In my Ex7 run (session sess_cf0fc093813a), the planner's second
 subgoal was sg_2 "commit the booking under policy rules" with
 assigned_half: "structured". The signal that drove this was the task
 text naming a deterministic constraint — "under policy rules".
@@ -24,8 +24,8 @@ ambiguity no longer matters.
 
 ### Citation
 
-- sessions/sess_a382a2149fc1/logs/tickets/tk_*/raw_output.json
-- sessions/sess_a382a2149fc1/logs/trace.jsonl:23
+- sessions/sess_cf0fc093813a/logs/tickets/tk_*/raw_output.json
+- sessions/sess_cf0fc093813a/logs/trace.jsonl:23
 
 ---
 
@@ -34,7 +34,7 @@ ambiguity no longer matters.
 ### Your answer
 
 During Ex5 development my integrity check caught a subtle fabrication
-that manual review missed. In session sess_de44a1b8eb12 the flyer
+that manual review missed. In session sess_cf0fc093813a the flyer
 claimed "Total: £560" and "Deposit: £112" — plausible numbers that
 followed the deposit formula in catering.json. I skimmed and moved on.
 
@@ -51,8 +51,8 @@ deliberately-weird value like £9999 and confirm it's caught.
 
 ### Citation
 
-- sessions/sess_de44a1b8eb12/workspace/flyer.md:12
-- sessions/sess_de44a1b8eb12/logs/trace.jsonl:15
+- sessions/sess_cf0fc093813a/workspace/flyer.md:12
+- sessions/sess_cf0fc093813a/logs/trace.jsonl:15
 
 ---
 
@@ -75,5 +75,5 @@ not commits from the rest. Session directories are commits.
 
 ### Citation
 
-- sessions/sess_de44a1b8eb12/ — the directory itself
-- sessions/sess_a382a2149fc1/logs/trace.jsonl
+- sessions/sess_cf0fc093813a/ — the directory itself
+- sessions/sess_cf0fc093813a/logs/trace.jsonl
