@@ -1,29 +1,25 @@
-# Ex6 — Rasa structured half
+# Ex6 — Rasa integration
+
+## Prompt
+
+How did you wire Rasa CALM into the sovereign-agent `StructuredHalf` protocol?
+Describe specifically: (1) how your subclass translates an input `dict` into a
+Rasa-compatible intent payload, (2) how your `ActionValidateBooking` custom
+action surfaces validation failures back into a `HalfResult`, and (3) one thing
+you would change about the integration if you were building this for production.
+
+**Word count:** 200-400 words.
 
 ## Your answer
 
-The RasaStructuredHalf subclass overrides run() to POST a booking
-intent to Rasa's REST webhook and interpret the response. Input
-payload flows: loop half produces raw booking data → StructuredHalf
-calls normalise_booking_payload (via validator.py) to produce a
-Rasa-shaped message with canonical types → urllib POST to Rasa →
-parse response for {action: committed} or {action: rejected} custom
-slots.
+The input dir used `normalise_booking_payload` to transform itself into 
+a json in `confirm_booking` dir. `ActioValidateBooking` custom action
+caught error on validation step. On the Rasa side, a custom action checks whether the booking is actually valid
+The escalation was triggered using `HalfResult`.
+and Python code wraps that into a HalfResult that tells the bridge to try again.
 
-For offline mode we spawn a stdlib http.server thread that mimics a
-Rasa webhook. It always confirms, which is enough for unit tests.
-Rejection is exercised in Ex7 where the loop half's arguments drive
-the decision.
-
-Three design choices worth noting: (1) we raise ValidationFailed in
-normalise_booking_payload and catch it in run() rather than letting
-it propagate; the StructuredHalf contract demands a HalfResult. (2)
-Network errors return success=False with SA_EXT_SERVICE_UNAVAILABLE
-— the caller decides whether to retry. (3) The stable sender_id is a
-hash of (venue+date+time) so the Rasa tracker is consistent across
-retries within one session.
 
 ## Citations
 
-- starter/rasa_half/validator.py — normalise_booking_payload + helpers
-- starter/rasa_half/structured_half.py — RasaStructuredHalf.run + mock server
+- sessions/sess_c689fbc596c7/logs/trace.jsonl:15 — booking comfirmation by Rasa
+- starter/rasa_half/validator.py — normalise_booking_payload
